@@ -1,0 +1,59 @@
+<div class="containerPrincipal">
+  <div class="container-inicio">
+    <p>Ajustes de la <strong>Cuenta</strong></p>
+    <div class="container-form">
+      <form [formGroup]="perfilForm" (ngSubmit)="onSave()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="str_usuario_nombre">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Apellido</mat-label>
+          <input matInput formControlName="str_usuario_apellido">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="str_usuario_email">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" formControlName="str_usuario_password">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Teléfono</mat-label>
+          <input matInput formControlName="str_usuario_telefono">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="str_usuario_direccion">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Rol</mat-label>
+          <input matInput formControlName="str_usuario_rol">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Estado</mat-label>
+          <input matInput formControlName="str_usuario_estado">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit">Guardar</button>
+      </form>
+    </div>
+
+    <button mat-raised-button (click)="openModal('small')">Abrir Modal</button>
+
+
+
+
+
+  </div>
+
+
+</div>

@@ -1,0 +1,21 @@
+<div class="containerPrincipal">
+  <div class="container-inicio">
+    <h2>Quesera <strong>{{informacionQuesera.nombre}}</strong></h2>
+      <div class="opciones">
+        <button mat-raised-button color="secundary" (click)="showComponent('RegistrosGastos')">Registros de Gastos</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Registrar')">Registrar Gasto</button>
+
+      </div>
+  </div>
+
+  <ng-container *ngIf="currentComponent === 'RegistrosGastos'">
+    <app-registro-gasto></app-registro-gasto>
+  </ng-container>
+
+  <ng-container *ngIf="currentComponent === 'Registrar'">
+    <app-agregar-gasto></app-agregar-gasto>
+  </ng-container>
+
+
+
+</div>

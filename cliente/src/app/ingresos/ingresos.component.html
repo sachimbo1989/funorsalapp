@@ -1,0 +1,23 @@
+<div class="containerPrincipal">
+  <div class="container-inicio">
+    <h2>Quesera <strong>{{informacionQuesera.nombre}}</strong></h2>
+      <div class="opciones">
+        <button mat-raised-button color="secundary" (click)="showComponent('RegistroIngreso')">Registros de Ingreso</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Registrar')">Registrar</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Reportes')">Reportes</button>
+      </div>
+  </div>
+
+  <ng-container *ngIf="currentComponent === 'RegistroIngreso'">
+    <app-registro-ingreso></app-registro-ingreso>
+  </ng-container>
+
+  <ng-container *ngIf="currentComponent === 'Registrar'">
+    <app-agregar-ingresos></app-agregar-ingresos>
+  </ng-container>
+
+  <ng-container *ngIf="currentComponent === 'Reportes'">
+    <app-reportes-ingresos></app-reportes-ingresos>
+  </ng-container>
+
+</div>

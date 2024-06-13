@@ -10,6 +10,8 @@ import { map, shareReplay } from 'rxjs/operators';
 })
 export class NavegacionComponent {
 
+  paginaActual: string = 'Inicio';
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -17,5 +19,12 @@ export class NavegacionComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver) {}
+
+  currentComponent: string = 'cliente';
+
+  showComponent(component: string) {
+    this.currentComponent = component;
+    this.paginaActual = component;
+  }
 
 }

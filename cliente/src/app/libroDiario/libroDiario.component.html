@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>Libro Diario</h2>
+  <form [formGroup]="transaccionForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Cliente</mat-label>
+      <select matNativeControl formControlName="cliente_id" (change)="onClienteChange($event)">
+        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{cliente.nombre}}</option>
+      </select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Fecha</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="fecha">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Descripción</mat-label>
+      <input matInput formControlName="descripcion" type="text">
+    </mat-form-field>
+
+    <div formArrayName="detalles">
+      <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
+        <h3>Detalle {{ i + 1 }}</h3>
+        <mat-form-field appearance="fill">
+          <mat-label>Cuenta</mat-label>
+          <select matNativeControl formControlName="cuenta_id">
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{ cuenta.nombre }}</option>
+          </select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Tipo</mat-label>
+          <select matNativeControl formControlName="tipo">
+            <option value="1">Debe</option>
+            <option value="2">Haber</option>
+          </select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Cantidad</mat-label>
+          <input matInput formControlName="cantidad" type="number">
+        </mat-form-field>
+        <button mat-raised-button color="warn" type="button" (click)="removeDetalle(i)">Eliminar Detalle</button>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" type="button" (click)="addDetalle()">Agregar Detalle</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="!transaccionForm.valid">Guardar Transacción</button>
+  </form>
+</div>
+
+

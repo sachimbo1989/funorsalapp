@@ -1,0 +1,23 @@
+<div class="containerPrincipal">
+  <div class="container-inicio">
+    <h2>Quesera <strong>{{informacionQuesera.nombre}}</strong></h2>
+      <div class="opciones">
+        <button mat-raised-button color="secundary" (click)="showComponent('IngresosGastos')">Balance de Ingresos y Gastos</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Balance2')">Balance 2</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Balance3')">Balance 3</button>
+      </div>
+  </div>
+
+  <ng-container *ngIf="currentComponent === 'IngresosGastos'">
+    <app-reportes-ingresos></app-reportes-ingresos>
+  </ng-container>
+
+  <ng-container *ngIf="currentComponent === 'Balance2'">
+
+  </ng-container>
+
+  <ng-container *ngIf="currentComponent === 'Balance3'">
+
+  </ng-container>
+
+</div>
