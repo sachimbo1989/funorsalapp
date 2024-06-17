@@ -34,6 +34,10 @@ export const DetalleDiario = sequelize .define('detalle_libro_diario', {
     dc_detalle_transaccion_cantidad: {
         type: DataTypes.DECIMAL
     },
+    dt_fecha_creacion: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
 }, {
     schema: 'estados_financieros',
     timestamps: false,

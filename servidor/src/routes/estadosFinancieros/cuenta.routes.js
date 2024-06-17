@@ -5,5 +5,6 @@ import cuentaController from "../../controllers/estadosFinancieros/cuenta.contro
 const router = Router();
 
 router.get("/cliente/:id", cuentaController.obtenerCuentasByIdCliente);
+router.post("/cliente", cuentaController.crearCuenta);
 
 export default router;

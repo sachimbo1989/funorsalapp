@@ -70,14 +70,16 @@ export const crearCliente = async (req, res) => {
                 body: []
             });
         }
+
+        console.log(data);
         
         const cliente = await Cliente.create({
             str_cliente_nombre: data.str_cliente_nombre,
             str_cliente_ruc: data.str_cliente_ruc,
             str_cliente_direccion: data.str_cliente_direccion,
-            str_cliente_ruc: data.str_cliente_ruc,
             str_cliente_telefono: data.str_cliente_telefono,
             str_cliente_correo: data.str_cliente_correo,
+            str_cliente_password: data.str_cliente_password,
         });
         if(!cliente){
             return res.json({

@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../database/database.js';
+import { Cliente } from '../estadosFinancieros/cliente.models.js';
 
 export const Usuario = sequelize.define('usuario', {
     int_usuario_id: {

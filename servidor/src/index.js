@@ -15,8 +15,8 @@ import { createAdmin } from "./config/admin.js";
 import { createClientes} from "./utils/clientes.js";
 import { createTipoCuentas} from "./utils/clientes.js";
 import { createCuentas} from "./utils/clientes.js";
-import { createTipoDetalles} from "./utils/clientes.js";
-import {createTipoTransacciones} from "./utils/clientes.js";
+// import { createTipoDetalles} from "./utils/clientes.js";
+// import {createTipoTransacciones} from "./utils/clientes.js";
 
 
 
@@ -27,18 +27,18 @@ async function main(port) {
       await sequelize.authenticate();
   
       // Sincronización de la base de datos
-      await sequelize.sync({ force: true, logging: false });
+      await sequelize.sync({ force: false, logging: false });
   
       const environment = configVariables.env === "production" ? "produccion" : "desarrollo";
       app.listen(port, () => {
         console.log(`Servidor ${environment} escuchando en el puerto ${port}`);
       });
       createAdmin();
-      createClientes();
-      createTipoCuentas();
+      // createClientes();
+      // createTipoCuentas();
       createCuentas();
-      createTipoDetalles();
-      createTipoTransacciones();
+      // createTipoDetalles();
+      // createTipoTransacciones();
       
     } catch (error) {
       console.error("Error al iniciar el servidor:", error);

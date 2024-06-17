@@ -16,6 +16,8 @@ import { HttpParams } from "@angular/common/http";
   private destroy$ = new Subject<any>();
   private clientesPaginados$ = new Subject<Cliente>();
 
+  public idClienteLogueado!: number;
+
   //metodos de accesos
 
   setClientesPaginados(clientes: any) {

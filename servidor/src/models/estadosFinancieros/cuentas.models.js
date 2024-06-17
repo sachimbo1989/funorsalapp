@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../database/database.js';
-import { TipoCuenta } from './tipoCuentas.models.js';
+// import { TipoCuenta } from './tipoCuentas.models.js';
 import {Cliente} from '../estadosFinancieros/cliente.models.js';
 
 export const Cuenta = sequelize.define('cuenta', {
@@ -9,13 +9,13 @@ export const Cuenta = sequelize.define('cuenta', {
         primaryKey: true,
         autoIncrement: true
     },
-    int_tipo_cuenta_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: TipoCuenta,
-            key: 'int_tipo_cuenta_id'
-        }
-    },
+    // int_tipo_cuenta_id: {
+    //     type: DataTypes.INTEGER,
+    //     references: {
+    //         model: TipoCuenta,
+    //         key: 'int_tipo_cuenta_id'
+    //     }
+    // },
     str_cuenta_nombre: {
         type: DataTypes.STRING
     },
@@ -29,12 +29,12 @@ export const Cuenta = sequelize.define('cuenta', {
     str_cuenta_descripcion: {
         type: DataTypes.STRING
     },
-    dc_cuenta_saldo_inicial: {
-        type: DataTypes.DECIMAL
+    str_cuenta_codigo: {
+        type: DataTypes.STRING
     },
-    dc_cuenta_saldo_actual: {
-        type: DataTypes.DECIMAL
-    },
+    int_cuenta_padre_id:{
+        type: DataTypes.INTEGER
+    }
 }, {
     schema: 'estados_financieros',
     timestamps: false,

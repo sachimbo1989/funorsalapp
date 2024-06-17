@@ -39,19 +39,19 @@ import { PlanCuentasComponent } from './plan-cuentas/plan-cuentas.component';
 
 
 import {MatTreeModule} from '@angular/material/tree';
-import { SubcuentasComponent } from './subcuentas/subcuentas.component';
+import { SubcuentasComponent } from './plan-cuentas/subcuentas/subcuentas.component';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import { ModalComponent } from './modal/modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { IngresosComponent } from './ingresos/ingresos.component';
-import { RegistroIngresoComponent } from './registro-ingreso/registro-ingreso.component';
-import { AgregarIngresosComponent } from './agregar-ingresos/agregar-ingresos.component';
-import { ReportesIngresosComponent } from './reportes-ingresos/reportes-ingresos.component';
+import { RegistroIngresoComponent } from './ingresos/registro-ingreso/registro-ingreso.component';
+import { AgregarIngresosComponent } from './ingresos/agregar-ingresos/agregar-ingresos.component';
+import { ReportesIngresosComponent } from './reportes/reportes-ingresos/reportes-ingresos.component';
 import { GastosComponent } from './gastos/gastos.component';
-import { RegistroGastoComponent } from './registro-gasto/registro-gasto.component';
-import { AgregarGastoComponent } from './agregar-gasto/agregar-gasto.component';
+import { RegistroGastoComponent } from './gastos/registro-gasto/registro-gasto.component';
+import { AgregarGastoComponent } from './gastos/agregar-gasto/agregar-gasto.component';
 import { ReportesComponent } from './reportes/reportes.component';
-import { AgregarCuentaComponent } from './agregar-cuenta/agregar-cuenta.component';
+import { AgregarCuentaComponent } from './plan-cuentas/agregar-cuenta/agregar-cuenta.component';
 import {NativeDateAdapter} from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EditarCuentaComponent } from './plan-cuentas/editar-cuenta/editar-cuenta.component';

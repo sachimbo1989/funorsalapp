@@ -14,6 +14,12 @@ export class LoginService {
   private urlApi_login : string = config.URL_API_BASE + 'login';
 
   logueado: boolean = false;
+  public idClienteLogueado!: number;
+
+  setClienteLogueado(idCliente: number) {
+    this.idClienteLogueado = idCliente;
+  }
+
 
 
   //Inicio de sesión

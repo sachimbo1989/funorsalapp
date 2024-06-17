@@ -133,6 +133,18 @@
                     required
                   />
                 </div>
+                <!-- Password -->
+                 <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    [(ngModel)]="newCliente.str_cliente_password"
+                    name="Contraseña"
+                    required
+                  />
+                </div>
 
                 <button type="submit" class="btn btn-primary">Agregar</button>
               </div>
@@ -200,23 +212,23 @@
           <form (ngSubmit)="onSave()">
             <div class="form-group">
               <label for="nombre">Nombre:</label>
-              <input type="text" id="nombre" class="form-control" [(ngModel)]="clienteSelected.str_cliente_nombre" name="nombre" required>
+              <input type="text"  class="form-control" [(ngModel)]="clienteSelected.str_cliente_nombre" name="nombre" required>
             </div>
             <div class="form-group">
               <label for="direccion">Direccion:</label>
-              <input type="text" id="direccion" class="form-control" [(ngModel)]="clienteSelected.str_cliente_direccion" name="direccion" required>
+              <input type="text" class="form-control" [(ngModel)]="clienteSelected.str_cliente_direccion" name="direccion" required>
             </div>
             <div class="form-group">
               <label for="telefono">Telefono:</label>
-              <input type="text" id="telefono" class="form-control" [(ngModel)]="clienteSelected.str_cliente_telefono" name="telefono" required>
+              <input type="text"  class="form-control" [(ngModel)]="clienteSelected.str_cliente_telefono" name="telefono" required>
             </div>
             <div class="form-group">
               <label for="ruc">RUC:</label>
-              <input type="text" id="ruc" class="form-control" [(ngModel)]="clienteSelected.str_cliente_ruc" name="ruc" required>
+              <input type="text"  class="form-control" [(ngModel)]="clienteSelected.str_cliente_ruc" name="ruc" required>
             </div>
             <div class="form-group">
               <label for="correo">Correo:</label>
-              <input type="email" id="correo" class="form-control" [(ngModel)]="clienteSelected.str_cliente_correo" name="correo" required>
+              <input type="email"  class="form-control" [(ngModel)]="clienteSelected.str_cliente_correo" name="correo" required>
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary" (click)="editarCliente()">Guardar</button>

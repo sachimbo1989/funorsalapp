@@ -15,4 +15,5 @@ export interface ClienteData{
   str_cliente_correo: string;
   str_cliente_telefono: string;
   str_cliente_direccion: string;
+  str_cliente_password: string;
 }

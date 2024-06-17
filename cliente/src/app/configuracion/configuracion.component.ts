@@ -11,6 +11,7 @@ export class ConfiguracionComponent implements OnInit {
   constructor() { }
   informacionQuesera!: any;
   currentComponent: string = 'cliente';
+  cuentas!:any;
 
 
   ngOnInit() {
@@ -22,6 +23,7 @@ export class ConfiguracionComponent implements OnInit {
       direccion: "Calle 123",
       telefono: "1234567890",
     }
+
   }
 
   showComponent(component: string) {

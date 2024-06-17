@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CuentasService } from '../core/services/cuentas.service';
-import { Cuenta } from '../plan-cuentas/plan-cuentas.component';
+import { CuentasService } from '../../core/services/cuentas.service';
+import { Cuenta } from '../plan-cuentas.component';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { ViewChild} from '@angular/core';
 import {MatAccordion,} from '@angular/material/expansion';
@@ -49,7 +49,7 @@ export class AgregarCuentaComponent implements OnInit {
   }
 
   buscarCuenta() {
-    this.cuentas = this.cuentas.filter((cuenta: { nombre: string; }) => cuenta.nombre.toLowerCase().includes(this.searchCuenta.toLowerCase()));
+    this.cuentas = this.cuentas.filter((cuenta: { str_cuenta_nombre: string; }) => cuenta.str_cuenta_nombre.toLowerCase().includes(this.searchCuenta.toLowerCase()));
     console.log(this.cuentas);
 
   }
@@ -59,8 +59,8 @@ export class AgregarCuentaComponent implements OnInit {
  comprobarCodigo(codigo: string) {
   //no puede ingresar un código de la lista de códigos existentes en this.cuentas
   //tampoco puede ingresar el código de la cuenta seleccionada
-  const códigos = this.cuentas.map(cuenta => cuenta.codigo);
-  return códigos.includes(codigo) || this.infoCuentaSeleccionada.codigo === codigo;
+  const códigos = this.cuentas.map(cuenta => cuenta.str_cuenta_codigo);
+  return códigos.includes(codigo) || this.infoCuentaSeleccionada.str_cuenta_codigo === codigo;
   }
 
 
@@ -79,8 +79,26 @@ export class AgregarCuentaComponent implements OnInit {
         str_cuenta_nombre: this.newCuenta.nombre,
         str_cuenta_codigo: this.newCuenta.codigo,
         int_cuenta_padre_id: this.infoCuentaSeleccionada.int_cuenta_id,
+        int_cliente_id: 1
       };
-      this.srvCuentas.agregarCuenta(nuevaCuenta);
+      this.srvCuentas.agregarCuentaByIdCliente(nuevaCuenta).pipe()
+      .subscribe((res: any) => {
+        if(res.status){
+          Swal.fire({
+            icon: 'success',
+            title: 'Cuenta agregada',
+            text: res.message,
+          });
+          this.srvCuentas.obtenerCuentasDelCliente(this.srvCuentas.idClienteLogueado);
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: res.message,
+          });
+        }
+
+      });
 
       this.newCuenta = { nombre: '', codigo: '', int_cuenta_id: 0, int_cuenta_padre_id: null };
     }

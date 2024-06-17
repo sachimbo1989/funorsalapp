@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
         this.loginService.login(this.loginForm.get('usuario')?.value, this.loginForm.get('contrasena')?.value).subscribe(
           (data: any) => {
             if(data.status){
+              console.log("Data usuario Logueado",data);
               Swal.close();
               Swal.fire({
                 title: 'Inicio de sesión correcto',

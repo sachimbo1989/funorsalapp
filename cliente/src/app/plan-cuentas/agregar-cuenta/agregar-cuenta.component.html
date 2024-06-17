@@ -10,8 +10,8 @@
           <th>Código</th>
         </tr>
         <tr *ngFor="let cuenta of cuentas">
-          <td>{{cuenta.nombre}}</td>
-          <td>{{cuenta.codigo}}</td>
+          <td>{{cuenta.str_cuenta_nombre}}</td>
+          <td>{{cuenta.str_cuenta_codigo}}</td>
         </tr>
       </table>
     </div>
@@ -26,8 +26,8 @@
           <th>ID Padre</th>
         </tr>
         <tr>
-          <td>{{infoCuentaSeleccionada.nombre}}</td>
-          <td>{{infoCuentaSeleccionada.codigo}}</td>
+          <td>{{infoCuentaSeleccionada.str_cuenta_nombre}}</td>
+          <td>{{infoCuentaSeleccionada.str_cuenta_codigo}}</td>
           <td>{{infoCuentaSeleccionada.int_cuenta_id}}</td>
           <td>{{infoCuentaSeleccionada.int_cuenta_padre_id || "null"}}</td>
         </tr>

@@ -23,7 +23,8 @@ export class CrearClienteComponent implements OnInit {
       str_cliente_ruc: ['', Validators.required],
       str_cliente_correo: ['', [Validators.required, Validators.email]],
       str_cliente_telefono: ['', Validators.required],
-      str_cliente_direccion: ['', Validators.required]
+      str_cliente_direccion: ['', Validators.required],
+      str_cliente_password: ['', Validators.required]
     });
    }
 

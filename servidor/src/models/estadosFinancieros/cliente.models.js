@@ -5,9 +5,13 @@ export const Cliente = sequelize.define('cliente', {
     int_cliente_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: false
     },
     str_cliente_nombre: {
+        type: DataTypes.STRING
+    },
+    str_cliente_password: {
         type: DataTypes.STRING
     },
     str_cliente_ruc: {

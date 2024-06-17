@@ -315,46 +315,38 @@ export const createTipoTransacciones = async () => {
 export const createCuentas = async () => {
     let cuentas = [
         {
-            int_cuenta_id: 1,
-            int_tipo_cuenta_id: 1,
             str_cuenta_nombre: 'Caja',
             int_cliente_id: 1,
             str_cuenta_descripcion: 'Caja',
-            dc_cuenta_saldo_inicial: 1000.00,
-            dc_cuenta_saldo_actual: 1500.00
+            str_cuenta_codigo: '1',
+            int_cuenta_padre_id: null
         },
         {
-            int_cuenta_id: 2,
-            int_tipo_cuenta_id: 2,
             str_cuenta_nombre: 'Proveedores',
-            int_cliente_id: 2,
+            int_cliente_id: 1,
             str_cuenta_descripcion: 'Proveedores',
-            dc_cuenta_saldo_inicial: 0.00,
-            dc_cuenta_saldo_actual: 200.00
+            str_cuenta_codigo: '2',
+            int_cuenta_padre_id: null
         },
         {
-            int_cuenta_id: 3,
-            int_tipo_cuenta_id: 4,
             str_cuenta_nombre: 'Ventas',
-            int_cliente_id: 3,
+            int_cliente_id: 1,
             str_cuenta_descripcion: 'Ventas',
-            dc_cuenta_saldo_inicial: 0.00,
-            dc_cuenta_saldo_actual: 500.00
+            str_cuenta_codigo: '3',
+            int_cuenta_padre_id: null
         },
         {
-            int_cuenta_id: 4,
-            int_tipo_cuenta_id: 5,
             str_cuenta_nombre: 'Compra de Insumos',
-            int_cliente_id: 4,
+            int_cliente_id: 1,
             str_cuenta_descripcion: 'Compra de Insumos',
-            dc_cuenta_saldo_inicial: 0.00,
-            dc_cuenta_saldo_actual: 200.00
-        }
+            str_cuenta_codigo: '4',
+            int_cuenta_padre_id: null
+        },
     ]
     const cuenta = await Cuenta.bulkCreate(cuentas);
 }
 
-
+ 
 
 export const createClientes = async () => {
 
