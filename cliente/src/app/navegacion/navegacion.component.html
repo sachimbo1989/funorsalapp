@@ -45,12 +45,12 @@
           (click)="showComponent('Cliente')"
           >Clientes</a
         >
-        <a
+        <!-- <a
         class="custom-list-item"
         [class.selected]="currentComponent === 'Perfil'"
         (click)="showComponent('Perfil')"
         >Perfil</a
-        >
+        > -->
         <a
         class="custom-list-item"
         [class.selected]="currentComponent === 'Configuración'"
@@ -77,8 +77,7 @@
           <p>Mi cuenta</p>
         </button>
       </mat-toolbar>
-      <!-- Add Content Here -->
-      <!-- compoentes  -->
+      <!-- componentes  -->
       <ng-container *ngIf="currentComponent === 'Gastos'">
         <app-gastos></app-gastos>
       </ng-container>
@@ -100,9 +99,9 @@
       <ng-container *ngIf="currentComponent === 'Inicio'">
         <app-inicio></app-inicio>
       </ng-container>
-      <ng-container *ngIf="currentComponent === 'Perfil'">
+      <!-- <ng-container *ngIf="currentComponent === 'Perfil'">
         <app-perfil></app-perfil>
-      </ng-container>
+      </ng-container> -->
       <ng-container *ngIf="currentComponent === 'Configuración'">
         <app-configuracion></app-configuracion>
       </ng-container>

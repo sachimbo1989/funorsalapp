@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ClienteService } from '../core/services/cliente.service';
 
 @Component({
   selector: 'app-reportes',
@@ -7,22 +8,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportesComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public srvCliente: ClienteService
+  ) {
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      console.log("Informacion Quesera",this.informacionQuesera);
+    });
+   }
   informacionQuesera!: any;
   currentComponent: string = 'registroIngreso';
 
 
   ngOnInit() {
-    this.llenarInformacionQuesera();
+
   }
 
-  llenarInformacionQuesera(){
-    this.informacionQuesera = {
-      nombre: "Cañitas",
-      direccion: "Calle 123",
-      telefono: "1234567890",
-    }
-  }
+
 
 
   showComponent(component: string) {

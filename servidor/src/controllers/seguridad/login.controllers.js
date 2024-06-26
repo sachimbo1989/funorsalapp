@@ -22,25 +22,26 @@ export const login = async (req, res) => {
             res.json({
                 status: true,
                 message: "Usuario encontrado",
-                bodys: usuarioF
+                body: usuarioF
             });
         }else{
             const cliente = await Cliente.findOne({
                 where: {
-                    str_cliente_correo: usuario,
+                    str_cliente_usuario: usuario,
                     str_cliente_password: contrasena
                 }
             });
-            console.log("data bd",cliente);
+            
             if (!cliente)  {
                 return res.status(400).json({
                     message: "Usuario o contraseña incorrectos"
                 });
             }
+            console.log("data bd",cliente);
             res.json({
                 status: true,
                 message: "Usuario encontrado",
-                bodys: cliente
+                body: cliente
             });
         }
     } catch (error) {

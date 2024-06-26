@@ -1,8 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../database/database.js';
 import { LibroDiario} from './libroDiario.models.js';
-import { Cuenta } from './cuentas.models.js';
-import { TipoDetalle } from './tipoDetalle.models.js';
 
 export const DetalleDiario = sequelize .define('detalle_libro_diario', {
     int_detalle_libro_diario_id: {
@@ -10,34 +8,33 @@ export const DetalleDiario = sequelize .define('detalle_libro_diario', {
         primaryKey: true,
         autoIncrement: true
     },
-    int_transaccion_id: {
+    int_libro_diario_id: {
         type: DataTypes.INTEGER,
         references: {
             model: LibroDiario,
             key: 'int_libro_diario_id'
         }
     },
-    int_cuenta_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: Cuenta,
-            key: 'int_cuenta_id'
-        }
+    str_detalle_libro_diario_nombre_cuenta: {
+        type: DataTypes.STRING
     },
-    int_tipo_detalle_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: TipoDetalle,
-            key: 'int_tipo_detalle_id'
-        }
+    str_detalle_libro_diario_codigo_cuenta: {
+        type: DataTypes.STRING
     },
-    dc_detalle_transaccion_cantidad: {
+    str_detalle_libro_diario_tipo: {
+        type: DataTypes.STRING
+    },
+    dc_detalle_libro_diario_monto: {
         type: DataTypes.DECIMAL
     },
     dt_fecha_creacion: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
     },
+    dt_fecha_actualizacion: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    }   
 }, {
     schema: 'estados_financieros',
     timestamps: false,

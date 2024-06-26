@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from '../core/services/login.service';
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
+import { ClienteService } from '../core/services/cliente.service';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private loginService: LoginService,
     private router: Router,
+    public srvCliente: ClienteService
   ) {
     this.loginForm = this.fb.group({
       usuario: ['',[Validators.required]],
@@ -53,6 +55,10 @@ export class LoginComponent implements OnInit {
                 showConfirmButton: false,
                 timer: 1500
               });
+              //guardar el id del usuario
+              this.srvCliente.setidClienteLogueado(data.body.int_cliente_id);
+              this.srvCliente.setClienteLogueado(data.body)
+              console.log("Cliente logueado xd",this.srvCliente.clienteLogueado);
               this.router.navigate(['/inicio']);
               this.loginService.logueado = true;
             }else{

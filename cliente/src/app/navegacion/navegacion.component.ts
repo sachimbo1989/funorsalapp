@@ -20,7 +20,7 @@ export class NavegacionComponent {
 
   constructor(private breakpointObserver: BreakpointObserver) {}
 
-  currentComponent: string = 'cliente';
+  currentComponent: string = 'Inicio';
 
   showComponent(component: string) {
     this.currentComponent = component;

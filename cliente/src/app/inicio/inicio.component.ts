@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { multi } from './data';
 import Chart from 'chart.js/auto';
+import { ClienteService } from '../core/services/cliente.service';
 
 @Component({
   selector: 'app-inicio',
@@ -14,22 +15,20 @@ export class InicioComponent implements OnInit {
 
   informacionQuesera!: any;
 
-  constructor() {
-
+  constructor(
+    private srvCliente: ClienteService
+  ) {
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      console.log("Informacion Quesera",this.informacionQuesera);
+    });
   }
 
   ngOnInit() {
     this.createChart();
-    this.llenarInformacionQuesera();
   }
 
-  llenarInformacionQuesera(){
-    this.informacionQuesera = {
-      nombre: "Quesera",
-      direccion: "Calle 123",
-      telefono: "1234567890",
-    }
-  }
+
 
   createChart(){
 

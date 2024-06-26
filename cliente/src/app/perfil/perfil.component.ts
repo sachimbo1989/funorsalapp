@@ -3,6 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalComponent } from '../modal/modal.component';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ClienteService } from '../core/services/cliente.service';
+import { Subject, takeUntil } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-perfil',
@@ -11,34 +14,35 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class PerfilComponent implements OnInit {
 
-  dataCuenta = {
-    int_usuario_id: 1,
-    str_usuario_nombre: 'Juan',
-    str_usuario_apellido: 'Perez',
-    str_usuario_email: 'correo@gmail.com',
-    str_usuario_password: 'hola',
-    str_usuario_telefono: '12345678',
-    str_usuario_direccion: 'direccion',
-    str_usuario_rol: 'usuario',
-    str_usuario_estado: 'ACTIVO'
-  }
+  informacionQuesera!: any;
+  idUsuario!: number;
   perfilForm!: FormGroup;
-
+  private destroy$ = new Subject<any>();
 
   ngOnInit() {
     this.perfilForm = this.fb.group({
-      str_usuario_nombre: [this.dataCuenta.str_usuario_nombre],
-      str_usuario_apellido: [this.dataCuenta.str_usuario_apellido],
-      str_usuario_email: [this.dataCuenta.str_usuario_email],
-      str_usuario_password: [this.dataCuenta.str_usuario_password],
-      str_usuario_telefono: [this.dataCuenta.str_usuario_telefono],
-      str_usuario_direccion: [this.dataCuenta.str_usuario_direccion],
-      str_usuario_rol: [this.dataCuenta.str_usuario_rol],
-      str_usuario_estado: [this.dataCuenta.str_usuario_estado]
+      str_cliente_nombre: [this.informacionQuesera.str_cliente_nombre],
+      str_cliente_correo: [this.informacionQuesera.str_cliente_correo],
+      str_cliente_password: [this.informacionQuesera.str_cliente_password],
+      str_cliente_telefono: [this.informacionQuesera.str_cliente_telefono],
+      str_cliente_direccion: [this.informacionQuesera.str_cliente_direccion],
+      str_cliente_ruc: [this.informacionQuesera.str_cliente_ruc],
+      str_cliente_usuario: [this.informacionQuesera.str_cliente_usuario],
+
+
     });
   }
 
-  constructor(public dialog: MatDialog,private fb: FormBuilder) {}
+  constructor(public dialog: MatDialog,private fb: FormBuilder, public srvCliente: ClienteService) {
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      console.log("Informacion Quesera",this.informacionQuesera);
+    });
+    this.srvCliente.selectIdClienteLogueado$.subscribe((id: any) => {
+      this.idUsuario = id;
+      console.log("ID",this.idUsuario);
+    });
+  }
 
   openModal(size: string): void {
     this.dialog.open(ModalComponent, {
@@ -50,6 +54,10 @@ export class PerfilComponent implements OnInit {
 
   onSave() {
     console.log("Click",this.perfilForm.value);
+    this.srvCliente.actualizarCliente(this.idUsuario,this.perfilForm.value)
+    console.log("ID",this.idUsuario);
+    this.srvCliente.obtenerCliente(this.idUsuario)
+
   }
 
 }

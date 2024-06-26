@@ -26,7 +26,8 @@ export class ClienteComponent implements OnInit {
     str_cliente_correo: '',
     str_cliente_telefono: '',
     str_cliente_direccion: '',
-    str_cliente_password: ''
+    str_cliente_password: '',
+    str_cliente_usuario: ''
   };
 
   paginatedClientes: ClienteData[] = [];
@@ -45,7 +46,8 @@ export class ClienteComponent implements OnInit {
     str_cliente_correo: '',
     str_cliente_telefono: '',
     str_cliente_direccion: '',
-    str_cliente_password: ''
+    str_cliente_password: '',
+    str_cliente_usuario: ''
   };
 
 
@@ -160,7 +162,8 @@ export class ClienteComponent implements OnInit {
           str_cliente_correo: '',
           str_cliente_telefono: '',
           str_cliente_direccion: '',
-          str_cliente_password: ''
+          str_cliente_password: '',
+          str_cliente_usuario: ''
         };
         this.closeModal();
       },
@@ -188,7 +191,8 @@ export class ClienteComponent implements OnInit {
         str_cliente_correo: '',
         str_cliente_telefono: '',
         str_cliente_direccion: '',
-        str_cliente_password: ''
+        str_cliente_password: '',
+        str_cliente_usuario: ''
       };
       this.closeModal();
     }

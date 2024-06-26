@@ -1,15 +1,12 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../../database/database.js';
-import {Cliente} from '../estadosFinancieros/cliente.models.js';
+import { Cliente } from './cliente.models.js';
 
-export const Cuenta = sequelize.define('cuenta', {
-    int_cuenta_id: {
+export const Ventas = sequelize.define('ventas', {
+    int_ventas_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
-    },
-    str_cuenta_nombre: {
-        type: DataTypes.STRING
     },
     int_cliente_id: {
         type: DataTypes.INTEGER,
@@ -18,14 +15,24 @@ export const Cuenta = sequelize.define('cuenta', {
             key: 'int_cliente_id'
         }
     },
-    str_cuenta_descripcion: {
+    dt_ventas_fecha: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    str_ventas_descripcion: {
         type: DataTypes.STRING
     },
-    str_cuenta_codigo: {
-        type: DataTypes.STRING
+    dc_ventas_total: {
+        type: DataTypes.DECIMAL
     },
-    int_cuenta_padre_id:{
-        type: DataTypes.INTEGER
+    dc_ventas_iva: {
+        type: DataTypes.DECIMAL
+    },
+    dc_ventas_subtotal: {
+        type: DataTypes.DECIMAL
+    },
+    str_ventas_estado: {
+        type: DataTypes.STRING
     }
 }, {
     schema: 'estados_financieros',

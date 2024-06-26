@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import config from "config/config";
-import { Cliente } from "../models/cliente";
+import { Cliente, ClienteData, Body } from '../models/cliente';
 import Swal from "sweetalert2";
-import { Subject, takeUntil } from "rxjs";
+import { BehaviorSubject, Subject, takeUntil } from "rxjs";
 import { HttpParams } from "@angular/common/http";
 
 @Injectable({
@@ -15,6 +15,29 @@ import { HttpParams } from "@angular/common/http";
 
   private destroy$ = new Subject<any>();
   private clientesPaginados$ = new Subject<Cliente>();
+  public clienteLogueado!: ClienteData;
+
+  private clienteLogueado$ = new BehaviorSubject<ClienteData>({} as ClienteData);
+  private idClienteLogueado$ = new BehaviorSubject<number>(0);
+
+
+  setClienteLogueado(cliente: ClienteData) {
+    this.clienteLogueado$.next(cliente);
+  }
+
+  get selectClienteLogueado$() {
+    return this.clienteLogueado$.asObservable();
+  }
+
+  setidClienteLogueado(id: number) {
+    this.idClienteLogueado$.next(id);
+  }
+
+  get selectIdClienteLogueado$() {
+    return this.idClienteLogueado$.asObservable();
+  }
+
+
 
   public idClienteLogueado!: number;
 
@@ -48,7 +71,7 @@ import { HttpParams } from "@angular/common/http";
   }
 
   //Obtener un cliente
-  getCliente(id: string) {
+  getCliente(id: any) {
     return this.http.get(this.urlApi_clientes + '/' + id);
   }
 
@@ -82,6 +105,52 @@ import { HttpParams } from "@angular/common/http";
         Swal.fire('Error', error.message, 'error');
       }
     })
+  }
+
+  //funcion general para actualizar un cliente
+  actualizarCliente(id: number, cliente: any) {
+    console.log('Actualizando cliente', id, cliente);
+    this.updateCliente(id, cliente)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: any) => {
+        if(data.status){
+          console.log('Cliente actualizado!!1', data);
+          Swal.fire({
+            title: 'Datos actualizados',
+            text: 'Se ha actualizado correctamente',
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+          });
+        }else{
+          Swal.fire({
+            title: 'Error al actualizar',
+            text: 'No se ha podido actualizar',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+      },
+      error: (error: any) => {
+        console.error('Error al actualizar cliente', error);
+      }
+    });
+  }
+
+  //funcion para obtener la informacion de un cliente
+  obtenerCliente(id: any) {
+    console.log('Obteniendo cliente SSSSSSSSSSSSS', id);
+    this.getCliente(id)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: any) => {
+        console.log('Cliente obtenido!!!!!!!!!!!!!!!!!!!!!!', data.body);
+        this.setClienteLogueado(data.body);
+      },
+      error: (error: any) => {
+        console.error('Error al obtener cliente', error);
+      }
+    });
   }
 
 

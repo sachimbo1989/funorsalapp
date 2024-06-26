@@ -1,11 +1,6 @@
 import { Cliente } from '../models/estadosFinancieros/cliente.models.js';
-import { TipoCuenta } from "../models/estadosFinancieros/tipoCuentas.models.js";
 import { Cuenta } from "../models/estadosFinancieros/cuentas.models.js";
-import { TipoDetalle } from "../models/estadosFinancieros/tipoDetalle.models.js";
-import { LibroDiario } from "../models/estadosFinancieros/libroDiario.models.js";
-import { TipoTransaccion } from "../models/estadosFinancieros/tipoTransaccion.models.js";
-import { LibroMayor } from "../models/estadosFinancieros/libroMayor.models.js";
-import { DetalleDiario } from "../models/estadosFinancieros/detalleTransaccion.models.js";
+
 
 /**
  * int_cliente_id: {
@@ -300,50 +295,117 @@ let tipoTransacciones = [
     }
 ]
 
-export const createTipoCuentas = async () => {
-    const tipoCuenta = await TipoCuenta.bulkCreate(tipoCuentas);
-}
 
-export const createTipoDetalles = async () => {
-    const tipoDetalle = await TipoDetalle.bulkCreate(tipoDetalles);
-}
 
-export const createTipoTransacciones = async () => {
-    const tipoTransaccion = await TipoTransaccion.bulkCreate(tipoTransacciones);
-}
 
-export const createCuentas = async () => {
-    let cuentas = [
+
+
+export const createCuentas = async (int_cliente_id) => {
+    
+    let cuentasGenerales = [
         {
-            str_cuenta_nombre: 'Caja',
-            int_cliente_id: 1,
-            str_cuenta_descripcion: 'Caja',
+            str_cuenta_nombre: 'ACTIVO',
+            int_cliente_id: int_cliente_id,
+            str_cuenta_descripcion: 'Cuentas de Activo',
             str_cuenta_codigo: '1',
             int_cuenta_padre_id: null
         },
         {
-            str_cuenta_nombre: 'Proveedores',
-            int_cliente_id: 1,
-            str_cuenta_descripcion: 'Proveedores',
+            str_cuenta_nombre: 'PASIVO',
+            int_cliente_id: int_cliente_id,
+            str_cuenta_descripcion: 'Cuentas de Pasivo',
             str_cuenta_codigo: '2',
             int_cuenta_padre_id: null
         },
+
         {
-            str_cuenta_nombre: 'Ventas',
-            int_cliente_id: 1,
-            str_cuenta_descripcion: 'Ventas',
+            str_cuenta_nombre: 'PATRIMONIO',
+            int_cliente_id: int_cliente_id,
+            str_cuenta_descripcion: 'Cuentas de Patrimonio',
             str_cuenta_codigo: '3',
             int_cuenta_padre_id: null
         },
         {
-            str_cuenta_nombre: 'Compra de Insumos',
-            int_cliente_id: 1,
-            str_cuenta_descripcion: 'Compra de Insumos',
+            str_cuenta_nombre: 'INGRESOS',
+            int_cliente_id: int_cliente_id,
+            str_cuenta_descripcion: 'Cuentas de Ingresos',
             str_cuenta_codigo: '4',
             int_cuenta_padre_id: null
         },
+        {
+            str_cuenta_nombre: 'GASTOS',
+            int_cliente_id: int_cliente_id,
+            str_cuenta_descripcion: 'Cuentas de Egresos',
+            str_cuenta_codigo: '5',
+            int_cuenta_padre_id: null
+        }
+
     ]
-    const cuenta = await Cuenta.bulkCreate(cuentas);
+ //creamos las cuentas
+ const cuentas = await Cuenta.bulkCreate(cuentasGenerales);
+
+ //obtengo los int_cuenta_id de las cuentas generales para crear las subcuentas y ponerlas en int_cuenta_padre_id dado el idCliente
+
+    let activo =await Cuenta.findOne({where: {str_cuenta_nombre: 'ACTIVO', int_cliente_id: int_cliente_id}});
+    let pasivo =await Cuenta.findOne({where: {str_cuenta_nombre: 'PASIVO', int_cliente_id: int_cliente_id}});
+    let patrimonio =await  Cuenta.findOne({where: {str_cuenta_nombre: 'PATRIMONIO', int_cliente_id: int_cliente_id}});
+
+    let activoCorriente =await Cuenta.create({
+        str_cuenta_nombre: 'ACTIVO CORRIENTE',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Activo Corriente',
+        str_cuenta_codigo: '1.1',
+        int_cuenta_padre_id: activo.int_cuenta_id
+    });
+
+    let efectivo = await Cuenta.create({
+        str_cuenta_nombre: 'EFECTIVO Y EQUIVALENTES DE EFECTIVO',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Efectivo y Equivalentes de Efectivo',
+        str_cuenta_codigo: '1.1.1',
+        int_cuenta_padre_id: activoCorriente.int_cuenta_id
+    });
+
+    let activoNoCorriente =await Cuenta.create({
+        str_cuenta_nombre: 'ACTIVO NO CORRIENTE',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Activo No Corriente',
+        str_cuenta_codigo: '1.2',
+        int_cuenta_padre_id: activo.int_cuenta_id
+    });
+
+    let propiedadPlantaEquipo =await Cuenta.create({
+        str_cuenta_nombre: 'PROPIEDAD, PLANTA Y EQUIPO',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Propiedad, Planta y Equipo',
+        str_cuenta_codigo: '1.2.1',
+        int_cuenta_padre_id: activoNoCorriente.int_cuenta_id
+    });
+
+    let pasivoCorriente =await Cuenta.create({
+        str_cuenta_nombre: 'PASIVO CORRIENTE',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Pasivo Corriente',
+        str_cuenta_codigo: '2.1',
+        int_cuenta_padre_id: pasivo.int_cuenta_id
+    });
+
+    let pasivoNoCorriente =await Cuenta.create({
+        str_cuenta_nombre: 'PASIVO NO CORRIENTE',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Pasivo No Corriente',
+        str_cuenta_codigo: '2.2',
+        int_cuenta_padre_id: pasivo.int_cuenta_id
+    });
+
+    let capital =await Cuenta.create({
+        str_cuenta_nombre: 'CAPITAL',
+        int_cliente_id: int_cliente_id,
+        str_cuenta_descripcion: 'Cuentas de Capital',
+        str_cuenta_codigo: '3.1',
+        int_cuenta_padre_id: patrimonio.int_cuenta_id
+    });
+    
 }
 
  

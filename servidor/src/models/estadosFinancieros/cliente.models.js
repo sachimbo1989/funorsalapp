@@ -11,6 +11,9 @@ export const Cliente = sequelize.define('cliente', {
     str_cliente_nombre: {
         type: DataTypes.STRING
     },
+    str_cliente_usuario: {
+        type: DataTypes.STRING
+    },
     str_cliente_password: {
         type: DataTypes.STRING
     },

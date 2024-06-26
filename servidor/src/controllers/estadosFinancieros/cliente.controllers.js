@@ -1,4 +1,5 @@
 import { Cliente } from "../../models/estadosFinancieros/cliente.models.js";
+import {createCuentas} from "../../utils/clientes.js";
 
 export const obtenerClientes = async (req, res) => {
     //paginacion
@@ -37,10 +38,13 @@ export const obtenerClientes = async (req, res) => {
 
 export const obtenerCliente = async (req, res) => {
     try {
+        console.log("Obteniendo cliente")
         const { id } = req.params;
         const cliente = await Cliente.findByPk(id);
         res.json({
-            data: cliente,
+            status:true,
+            message: "Cliente encontrado",
+            body: cliente,
         });
     } catch (error) {
         console.log(error);
@@ -53,8 +57,6 @@ export const obtenerCliente = async (req, res) => {
 export const crearCliente = async (req, res) => {
     try {
         const data = req.body;
-       
-
         //comprobar que el ruc no se repita
 
         const ruc = data.str_cliente_ruc;
@@ -80,6 +82,7 @@ export const crearCliente = async (req, res) => {
             str_cliente_telefono: data.str_cliente_telefono,
             str_cliente_correo: data.str_cliente_correo,
             str_cliente_password: data.str_cliente_password,
+            str_cliente_usuario: data.str_cliente_usuario,
         });
         if(!cliente){
             return res.json({
@@ -88,6 +91,9 @@ export const crearCliente = async (req, res) => {
                 body: []
             });
         }
+
+        //crear cuentas por defecto
+        createCuentas(cliente.int_cliente_id);
         res.json({
             status:true,
             message: "Cliente creado exitosamente",
@@ -111,12 +117,14 @@ export const actualizarCliente = async (req, res) => {
 
 
         const cliente = await Cliente.update({
-            str_cliente_nombre: data.str_cliente_nombre,
+            str_cliente_nombre: data.str_cliente_nombre ,
             str_cliente_ruc: data.str_cliente_ruc,
             str_cliente_direccion: data.str_cliente_direccion,
             str_cliente_ruc: data.str_cliente_ruc,
             str_cliente_telefono: data.str_cliente_telefono,
             str_cliente_correo: data.str_cliente_correo,
+            str_cliente_password: data.str_cliente_password,
+            str_cliente_usuario: data.str_cliente_usuario,
             dt_fecha_actualizacion: new Date(),
         }, {
             where: {

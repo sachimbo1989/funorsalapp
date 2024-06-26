@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ClienteService } from '../core/services/cliente.service';
 export interface Gastos {
   int_transaccion_id: number;
   str_transaccion_nombre: string;
@@ -18,8 +19,14 @@ export interface Gastos {
 })
 export class GastosComponent implements OnInit, AfterViewInit {
 
-  constructor() {
+  constructor(
+    public srvCliente: ClienteService
+  ) {
     this.dataSource = new MatTableDataSource(this.ingresos);
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      console.log("Informacion Quesera",this.informacionQuesera);
+    });
   }
   informacionQuesera!: any;
   currentComponent: string = 'registroIngreso';
@@ -37,16 +44,10 @@ export class GastosComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    this.llenarInformacionQuesera();
+
   }
 
-  llenarInformacionQuesera(){
-    this.informacionQuesera = {
-      nombre: "Cañitas",
-      direccion: "Calle 123",
-      telefono: "1234567890",
-    }
-  }
+
 
 
   showComponent(component: string) {
