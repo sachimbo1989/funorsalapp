@@ -22,6 +22,12 @@
           >Inicio</a
         >
         <a
+        class="custom-list-item"
+        [class.selected]="currentComponent === 'Diario'"
+        (click)="showComponent('Diario')"
+        >Libro Diario</a
+        >
+        <a
           class="custom-list-item"
           [class.selected]="currentComponent === 'Ingresos'"
           (click)="showComponent('Ingresos')"
@@ -104,6 +110,9 @@
       </ng-container> -->
       <ng-container *ngIf="currentComponent === 'Configuración'">
         <app-configuracion></app-configuracion>
+      </ng-container>
+      <ng-container *ngIf="currentComponent === 'Diario'">
+        <app-libroDiario></app-libroDiario>s
       </ng-container>
     </mat-sidenav-content>
   </mat-sidenav-container>

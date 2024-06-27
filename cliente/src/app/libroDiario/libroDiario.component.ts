@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { libroDiarioService } from '../core/services/libroDiario.service';
 import { Body } from '../core/models/cliente';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-libroDiario',
@@ -10,93 +11,97 @@ import { Body } from '../core/models/cliente';
 })
 export class LibroDiarioComponent implements OnInit {
 
-  transaccionForm: FormGroup;
-  cuentas: any[] = [];
-  clientes: any[] = [];
-  data!: any;
-  dataCuentas!: any;
+  libroDiarioForm: FormGroup;
 
-  constructor(
-    private fb: FormBuilder,
-    private srvLibroDiario: libroDiarioService
-  ) {
-    this.transaccionForm = this.fb.group({
-      cliente_id: ['', Validators.required], // Nuevo campo para cliente
-      fecha: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      detalles: this.fb.array([])
+  cuentas = [
+    { codigo: '100', nombre: 'Caja' },
+    { codigo: '200', nombre: 'Bancos' },
+    // Agrega más cuentas según sea necesario
+  ];
+
+  columnas: string[] = ['cuenta', 'nombreCuenta', 'codigoCuenta', 'montoCredito', 'montoDebito', 'eliminar'];
+
+  constructor(private fb: FormBuilder) {
+    this.libroDiarioForm = this.fb.group({
+      entradas: this.fb.array([]),
     });
   }
 
-  ngOnInit() {
-
-    this.srvLibroDiario.getClientes().subscribe(data => {
-      this.data = data;
-      this.llenarClientesEnSelect();
-    }
-    );
-
+  ngOnInit(): void {
+    this.agregarEntrada(); // Agregar una entrada inicial al iniciar el componente
   }
 
-  llenarClientesEnSelect() {
-    this.clientes = this.data.body;
-    console.log(this.clientes);
-    for (let i = 0; i < this.clientes.length; i++) {
-      this.clientes[i].nombre = this.clientes[i].str_cliente_nombre;
-      // Asegurándonos de que el id esté correctamente asociado
-      this.clientes[i].id = this.clientes[i].int_cliente_id;
-    }
+  get entradasFormArray() {
+    return this.libroDiarioForm.get('entradas') as FormArray;
   }
 
-  get detalles() {
-    return this.transaccionForm.get('detalles') as FormArray;
-  }
-
-  addDetalle() {
-    const detalleForm = this.fb.group({
-      cuenta_id: ['', Validators.required],
-      tipo: ['', Validators.required],
-      cantidad: ['', [Validators.required, Validators.min(0.01)]],
+  agregarEntrada() {
+    const entrada = this.fb.group({
+      cuenta: ['', Validators.required],
+      nombreCuenta: [''],
+      codigoCuenta: [''],
+      montoCredito: ['', Validators.required],
+      montoDebito: ['', Validators.required],
     });
-    this.detalles.push(detalleForm);
+
+    this.entradasFormArray.push(entrada);
   }
 
-  removeDetalle(index: number) {
-    this.detalles.removeAt(index);
-  }
-
-
-onClienteChange(event: Event) {
-    const clienteId = this.transaccionForm.get('cliente_id')?.value;
-    console.log('Cliente seleccionado ID:', clienteId);
-
-    // Aquí llamas a tu servicio para obtener las cuentas del cliente por su ID
-    this.srvLibroDiario.getCuentasPorCliente(clienteId).subscribe(cuentas => {
-      this.dataCuentas = cuentas;
-      console.log('Cuentas del cliente:', this.dataCuentas);
-      this.llenarCuentasEnSelect();
-    });
-  }
-
-  llenarCuentasEnSelect() {
-    this.cuentas = this.dataCuentas.body;
-    console.log('Cuentas:', this.cuentas);
-    for (let i = 0; i < this.cuentas.length; i++) {
-      this.cuentas[i].nombre = this.cuentas[i].str_cuenta_nombre;
-      // Asegurándonos de que el id esté correctamente asociado
-      this.cuentas[i].id = this.cuentas[i].int_cuenta_id;
-    }
-
-  }
-
-  onSubmit() {
-    if (this.transaccionForm.valid) {
-      this.srvLibroDiario.createTransaccion(this.transaccionForm.value).subscribe(response => {
-        console.log('Transacción creada', response);
-        this.transaccionForm.reset();
-        this.detalles.clear();
+  seleccionarCuenta(event: MatSelectChange, entradaIndex: number) {
+    const cuentaSeleccionada = event.value;
+    const cuenta = this.cuentas.find(c => c.codigo === cuentaSeleccionada);
+    if (cuenta) {
+      const entradaFormGroup = this.entradasFormArray.at(entradaIndex);
+      entradaFormGroup.patchValue({
+        nombreCuenta: cuenta.nombre,
+        codigoCuenta: cuenta.codigo
       });
     }
   }
 
+  eliminarEntrada(index: number) {
+    this.entradasFormArray.removeAt(index);
+  }
+
+  calcularTotalCreditos() {
+    let totalCreditos = 0;
+    if (this.entradasFormArray) {
+      this.entradasFormArray.controls.forEach(entrada => {
+        const montoCreditoControl = entrada.get('montoCredito');
+        if (montoCreditoControl && montoCreditoControl.value) {
+          const montoCredito = parseFloat(montoCreditoControl.value);
+          if (!isNaN(montoCredito)) {
+            totalCreditos += montoCredito;
+          }
+        }
+      });
+    }
+    return totalCreditos;
+  }
+
+  calcularTotalDebitos() {
+    let totalDebitos = 0;
+    if (this.entradasFormArray) {
+      this.entradasFormArray.controls.forEach(entrada => {
+        const montoDebitoControl = entrada.get('montoDebito');
+        if (montoDebitoControl && montoDebitoControl.value) {
+          const montoDebito = parseFloat(montoDebitoControl.value);
+          if (!isNaN(montoDebito)) {
+            totalDebitos += montoDebito;
+          }
+        }
+      });
+    }
+    return totalDebitos;
+  }
+
+  onSubmit() {
+    if (this.libroDiarioForm.valid) {
+      // Lógica para guardar el libro diario
+      console.log(this.libroDiarioForm.value);
+    } else {
+      // Mostrar errores o manejar formulario inválido según sea necesario
+      console.log('Formulario inválido');
+    }
+  }
 }

@@ -1,54 +1,75 @@
-<div class="container">
-  <h2>Libro Diario</h2>
-  <form [formGroup]="transaccionForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Cliente</mat-label>
-      <select matNativeControl formControlName="cliente_id" (change)="onClienteChange($event)">
-        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{cliente.nombre}}</option>
-      </select>
-    </mat-form-field>
+<form [formGroup]="libroDiarioForm" (ngSubmit)="onSubmit()">
+  <table mat-table [dataSource]="entradasFormArray.controls" formArrayName="entradas">
 
-    <mat-form-field appearance="fill">
-      <mat-label>Fecha</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="fecha">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Descripción</mat-label>
-      <input matInput formControlName="descripcion" type="text">
-    </mat-form-field>
-
-    <div formArrayName="detalles">
-      <div *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
-        <h3>Detalle {{ i + 1 }}</h3>
+    <!-- Columnas de la tabla -->
+    <ng-container matColumnDef="cuenta">
+      <th mat-header-cell *matHeaderCellDef>Cuenta</th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
         <mat-form-field appearance="fill">
           <mat-label>Cuenta</mat-label>
-          <select matNativeControl formControlName="cuenta_id">
-            <option *ngFor="let cuenta of cuentas" [value]="cuenta.id">{{ cuenta.nombre }}</option>
-          </select>
+          <mat-select [formControlName]="i" formArrayName="entradas" (selectionChange)="seleccionarCuenta($event, i)" required>
+            <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.codigo">
+              {{ cuenta.nombre }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
+      </td>
+    </ng-container>
 
+    <ng-container matColumnDef="nombreCuenta">
+      <th mat-header-cell *matHeaderCellDef>Nombre de la cuenta</th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
         <mat-form-field appearance="fill">
-          <mat-label>Tipo</mat-label>
-          <select matNativeControl formControlName="tipo">
-            <option value="1">Debe</option>
-            <option value="2">Haber</option>
-          </select>
+          <input matInput [formControlName]="i" formArrayName="entradas" placeholder="Nombre de la cuenta" readonly>
         </mat-form-field>
+      </td>
+    </ng-container>
 
+    <ng-container matColumnDef="codigoCuenta">
+      <th mat-header-cell *matHeaderCellDef>Código de la cuenta</th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
         <mat-form-field appearance="fill">
-          <mat-label>Cantidad</mat-label>
-          <input matInput formControlName="cantidad" type="number">
+          <input matInput [formControlName]="i" formArrayName="entradas" placeholder="Código de la cuenta" readonly>
         </mat-form-field>
-        <button mat-raised-button color="warn" type="button" (click)="removeDetalle(i)">Eliminar Detalle</button>
-      </div>
-    </div>
+      </td>
+    </ng-container>
 
-    <button mat-raised-button color="primary" type="button" (click)="addDetalle()">Agregar Detalle</button>
-    <button mat-raised-button color="accent" type="submit" [disabled]="!transaccionForm.valid">Guardar Transacción</button>
-  </form>
-</div>
+    <ng-container matColumnDef="montoCredito">
+      <th mat-header-cell *matHeaderCellDef>Monto Crédito</th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
+        <mat-form-field appearance="fill">
+          <input matInput type="number" [formControlName]="i" formArrayName="entradas" placeholder="Monto Crédito" required>
+        </mat-form-field>
+      </td>
+    </ng-container>
 
+    <ng-container matColumnDef="montoDebito">
+      <th mat-header-cell *matHeaderCellDef>Monto Débito</th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
+        <mat-form-field appearance="fill">
+          <input matInput type="number" [formControlName]="i" formArrayName="entradas" placeholder="Monto Débito" required>
+        </mat-form-field>
+      </td>
+    </ng-container>
 
+    <!-- Columna para eliminar entrada -->
+    <ng-container matColumnDef="eliminar">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let entrada; let i = index;">
+        <button mat-icon-button color="warn" (click)="eliminarEntrada(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Definición de filas -->
+    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+  </table>
+
+  <!-- Botón para agregar entrada -->
+  <button mat-raised-button color="primary" type="button" (click)="agregarEntrada()">Agregar cuenta</button>
+
+  <!-- Botón para guardar -->
+  <button mat-raised-button color="primary" type="submit">Guardar</button>
+</form>
