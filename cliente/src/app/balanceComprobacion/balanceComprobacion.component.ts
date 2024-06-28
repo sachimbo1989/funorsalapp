@@ -15,16 +15,12 @@ export class BalanceComprobacionComponent implements OnInit {
   constructor(private libroDiarioService: libroDiarioService) {}
 
   ngOnInit() {
-    this.libroDiarioService.getClientesE().subscribe(data => {
-      this.clientes = data;
-    });
+
   }
 
   onClienteChange(event: any) {
     const clienteId = event.value;
-    this.libroDiarioService.getLibrosDiariosPorCliente(clienteId).subscribe(data => {
-      this.librosDiarios = data;
-    });
+
   }
 
   verDetalles(libroDiarioId: number) {

@@ -1,75 +1,62 @@
-<form [formGroup]="libroDiarioForm" (ngSubmit)="onSubmit()">
-  <table mat-table [dataSource]="entradasFormArray.controls" formArrayName="entradas">
 
-    <!-- Columnas de la tabla -->
-    <ng-container matColumnDef="cuenta">
-      <th mat-header-cell *matHeaderCellDef>Cuenta</th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <mat-form-field appearance="fill">
-          <mat-label>Cuenta</mat-label>
-          <mat-select [formControlName]="i" formArrayName="entradas" (selectionChange)="seleccionarCuenta($event, i)" required>
-            <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.codigo">
-              {{ cuenta.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </td>
-    </ng-container>
+<div class="containerPrincipal">
+  <div class="container-inicio">
+    <h2>Registro de Libro Diario</h2>
+    <h2>Empresa <strong>{{informacionQuesera.str_cliente_nombre}}</strong></h2>
+    <div>
+      <button type="button" (click)="addEntry()">Agregar Fila</button>
+    </div>
+    <div>
+      <mat-form-field>
+        <mat-label>Fecha del registro</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="fechaSeleccionada" >
+        <mat-hint>Mes/Día/Año</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <form [formGroup]="journalForm" (ngSubmit)="onSubmit()">
+      <table>
+        <thead>
+          <tr>
+            <!-- <th>Fecha</th> -->
+            <th>Cuentas</th>
+            <th>Código</th>
+            <th>Débitos</th>
+            <th>Créditos</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="entries">
+          <tr *ngFor="let entry of entries.controls; let i = index" [formGroupName]="i">
+            <!-- <td><input formControlName="date" type="date"></td> -->
+           <td>
+            <input type="text" [formControl]="getAccountControl(i)"
+            [matAutocomplete]="auto" (input)="filterAccounts(i)">
+           </td>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onAccountSelected($event, i)">
+              <mat-option *ngFor="let option of filteredAccounts[i]" [value]="option.str_cuenta_nombre">
+                {{ option.str_cuenta_codigo }} - {{ option.str_cuenta_nombre }}
+              </mat-option>
+            </mat-autocomplete>
 
-    <ng-container matColumnDef="nombreCuenta">
-      <th mat-header-cell *matHeaderCellDef>Nombre de la cuenta</th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <mat-form-field appearance="fill">
-          <input matInput [formControlName]="i" formArrayName="entradas" placeholder="Nombre de la cuenta" readonly>
-        </mat-form-field>
-      </td>
-    </ng-container>
+            <td><input formControlName="code" type="text" (input)="filterAccounts(i)"></td>
 
-    <ng-container matColumnDef="codigoCuenta">
-      <th mat-header-cell *matHeaderCellDef>Código de la cuenta</th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <mat-form-field appearance="fill">
-          <input matInput [formControlName]="i" formArrayName="entradas" placeholder="Código de la cuenta" readonly>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="montoCredito">
-      <th mat-header-cell *matHeaderCellDef>Monto Crédito</th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <mat-form-field appearance="fill">
-          <input matInput type="number" [formControlName]="i" formArrayName="entradas" placeholder="Monto Crédito" required>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="montoDebito">
-      <th mat-header-cell *matHeaderCellDef>Monto Débito</th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <mat-form-field appearance="fill">
-          <input matInput type="number" [formControlName]="i" formArrayName="entradas" placeholder="Monto Débito" required>
-        </mat-form-field>
-      </td>
-    </ng-container>
-
-    <!-- Columna para eliminar entrada -->
-    <ng-container matColumnDef="eliminar">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let entrada; let i = index;">
-        <button mat-icon-button color="warn" (click)="eliminarEntrada(i)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
-
-    <!-- Definición de filas -->
-    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
-  </table>
-
-  <!-- Botón para agregar entrada -->
-  <button mat-raised-button color="primary" type="button" (click)="agregarEntrada()">Agregar cuenta</button>
-
-  <!-- Botón para guardar -->
-  <button mat-raised-button color="primary" type="submit">Guardar</button>
-</form>
+            <td><input formControlName="debit" type="number" (input)="updateSums()" ></td>
+            <td><input formControlName="credit" type="number" (input)="updateSums()"></td>
+            <td>
+              <button type="button" (click)="removeEntry(i)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div>
+        <p>Sumas iguales:</p>
+        <p>Débitos: {{ totalDebit | currency }}</p>
+        <p>Créditos: {{ totalCredit | currency}}</p>
+      </div>
+      <div *ngIf="!isBalanced">Las sumas de débitos y créditos no coinciden.</div>
+      <button type="submit" [disabled]="!isBalanced">Guardar</button>
+    </form>
+  </div>
+</div>

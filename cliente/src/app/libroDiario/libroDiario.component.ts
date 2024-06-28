@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { libroDiarioService } from '../core/services/libroDiario.service';
-import { Body } from '../core/models/cliente';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSelectChange } from '@angular/material/select';
+import { CuentasService } from '../core/services/cuentas.service';
+import { ClienteService } from '../core/services/cliente.service';
+import { Cuenta } from '../plan-cuentas/plan-cuentas.component';
+import { Subject, takeUntil } from 'rxjs';
+import { libroDiarioService } from '../core/services/libroDiario.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-libroDiario',
@@ -10,98 +15,135 @@ import { MatSelectChange } from '@angular/material/select';
   styleUrls: ['./libroDiario.component.css']
 })
 export class LibroDiarioComponent implements OnInit {
+  informacionQuesera!: any;
+  fechaSeleccionada!: Date;
+  journalForm: FormGroup;
+  fecha !: Date;
+  private destroy$ = new Subject<any>();
+  cuentas: Cuenta[] = [];
+  availableAccounts!: Cuenta[];
+  totalDebit = 0;
+  totalCredit = 0;
+  filteredAccounts: any[][] = [];
 
-  libroDiarioForm: FormGroup;
+  constructor(private fb: FormBuilder,
+    private srvCuentas: CuentasService,
+    private srvCliente: ClienteService,
+    private srvLibroDiario: libroDiarioService
+  ) {
+    this.fechaSeleccionada = new Date();
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      this.srvCuentas.obtenerCuentasDelCliente(this.informacionQuesera.int_cliente_id);
+      this.obtenerCuentas();
+    });
 
-  cuentas = [
-    { codigo: '100', nombre: 'Caja' },
-    { codigo: '200', nombre: 'Bancos' },
-    // Agrega más cuentas según sea necesario
-  ];
-
-  columnas: string[] = ['cuenta', 'nombreCuenta', 'codigoCuenta', 'montoCredito', 'montoDebito', 'eliminar'];
-
-  constructor(private fb: FormBuilder) {
-    this.libroDiarioForm = this.fb.group({
-      entradas: this.fb.array([]),
+    this.journalForm = this.fb.group({
+      entries: this.fb.array([this.createEntry()])
+    });
+  }
+  obtenerCuentas(){
+    this.srvCuentas.getCuentas$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((cuentas: any) => {
+      this.availableAccounts = cuentas;
     });
   }
 
-  ngOnInit(): void {
-    this.agregarEntrada(); // Agregar una entrada inicial al iniciar el componente
+  ngOnInit() {
+    this.updateSums();
   }
 
-  get entradasFormArray() {
-    return this.libroDiarioForm.get('entradas') as FormArray;
+  get entries(): FormArray {
+    return this.journalForm.get('entries') as FormArray;
   }
 
-  agregarEntrada() {
-    const entrada = this.fb.group({
-      cuenta: ['', Validators.required],
-      nombreCuenta: [''],
-      codigoCuenta: [''],
-      montoCredito: ['', Validators.required],
-      montoDebito: ['', Validators.required],
+  createEntry(): FormGroup {
+    return this.fb.group({
+      // date: ['', Validators.required],
+      code: ['', Validators.required],
+      account: ['', Validators.required],
+      debit: [0, Validators.min(0)],
+      credit: [0, Validators.min(0)]
     });
-
-    this.entradasFormArray.push(entrada);
   }
 
-  seleccionarCuenta(event: MatSelectChange, entradaIndex: number) {
-    const cuentaSeleccionada = event.value;
-    const cuenta = this.cuentas.find(c => c.codigo === cuentaSeleccionada);
-    if (cuenta) {
-      const entradaFormGroup = this.entradasFormArray.at(entradaIndex);
-      entradaFormGroup.patchValue({
-        nombreCuenta: cuenta.nombre,
-        codigoCuenta: cuenta.codigo
-      });
-    }
+  addEntry() {
+    this.entries.push(this.createEntry());
+  }
+  removeEntry(index: number) {
+    this.entries.removeAt(index);
+    this.updateSums();
   }
 
-  eliminarEntrada(index: number) {
-    this.entradasFormArray.removeAt(index);
+  updateSums() {
+    this.totalDebit = this.entries.controls.reduce((sum, entry) => sum + Number(entry.get('debit')?.value || 0), 0);
+    this.totalCredit = this.entries.controls.reduce((sum, entry) => sum + Number(entry.get('credit')?.value || 0), 0);
   }
 
-  calcularTotalCreditos() {
-    let totalCreditos = 0;
-    if (this.entradasFormArray) {
-      this.entradasFormArray.controls.forEach(entrada => {
-        const montoCreditoControl = entrada.get('montoCredito');
-        if (montoCreditoControl && montoCreditoControl.value) {
-          const montoCredito = parseFloat(montoCreditoControl.value);
-          if (!isNaN(montoCredito)) {
-            totalCreditos += montoCredito;
-          }
-        }
-      });
-    }
-    return totalCreditos;
-  }
-
-  calcularTotalDebitos() {
-    let totalDebitos = 0;
-    if (this.entradasFormArray) {
-      this.entradasFormArray.controls.forEach(entrada => {
-        const montoDebitoControl = entrada.get('montoDebito');
-        if (montoDebitoControl && montoDebitoControl.value) {
-          const montoDebito = parseFloat(montoDebitoControl.value);
-          if (!isNaN(montoDebito)) {
-            totalDebitos += montoDebito;
-          }
-        }
-      });
-    }
-    return totalDebitos;
+  get isBalanced(): boolean {
+    return this.totalDebit === this.totalCredit;
   }
 
   onSubmit() {
-    if (this.libroDiarioForm.valid) {
-      // Lógica para guardar el libro diario
-      console.log(this.libroDiarioForm.value);
+    if (this.journalForm.valid && this.isBalanced) {
+      // Aquí puedes manejar la lógica de guardado
+      console.log(this.journalForm.value);
+      let infoLibroDiario = {
+        fecha: this.fechaSeleccionada,
+        entradas: this.journalForm.value.entries,
+        idCliente: this.informacionQuesera.int_cliente_id
+      };
+      this.srvLibroDiario.createLibroDiario(infoLibroDiario)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (data: any) => {
+          if(data.status){
+            Swal.fire({
+              title: 'Registro exitoso',
+              text: data.message,
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            });
+          }else{
+            Swal.fire({
+              title: 'Error',
+              text: 'Ha ocurrido un error al crear el libro diario',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        },
+      });
+
+
+
     } else {
-      // Mostrar errores o manejar formulario inválido según sea necesario
-      console.log('Formulario inválido');
+      alert('Las sumas de débitos y créditos no coinciden o hay campos inválidos.');
     }
+  }
+  filterAccounts(index: number) {
+    const entry = this.entries.at(index);
+    const filterValue = entry.get('account')?.value.toLowerCase();
+    this.filteredAccounts[index] = this.availableAccounts.filter(account =>
+      account.str_cuenta_nombre.toLowerCase().includes(filterValue) || account.str_cuenta_codigo.toLowerCase().includes(filterValue)
+    );
+  }
+  onAccountSelected(event: any, index: number) {
+    const selectedAccount = this.availableAccounts.find(account => account.str_cuenta_nombre === event.option.value);
+    if (selectedAccount) {
+      const entry = this.entries.at(index);
+      entry.patchValue({
+        code: selectedAccount.str_cuenta_codigo,
+        account: selectedAccount.str_cuenta_nombre
+      });
+    }
+  }
+
+  initializeFilteredAccounts() {
+    this.filteredAccounts = this.entries.controls.map(() => this.availableAccounts.slice());
+  }
+  getAccountControl(index: number): FormControl {
+    return this.entries.at(index).get('account') as FormControl;
   }
 }

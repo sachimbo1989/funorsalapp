@@ -55,6 +55,7 @@ import { AgregarCuentaComponent } from './plan-cuentas/agregar-cuenta/agregar-cu
 import {NativeDateAdapter} from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EditarCuentaComponent } from './plan-cuentas/editar-cuenta/editar-cuenta.component';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 
 
@@ -115,7 +116,9 @@ import { EditarCuentaComponent } from './plan-cuentas/editar-cuenta/editar-cuent
     MatPaginatorModule,
     MatDialogModule,
     NativeDateModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatInputModule,
+    MatAutocompleteModule
 
 
 
