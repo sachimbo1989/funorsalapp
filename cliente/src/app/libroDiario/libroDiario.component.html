@@ -1,11 +1,18 @@
 
 <div class="containerPrincipal">
+  <div>
+    <button type="button" (click)="verDiarios()">Ver Registros</button>
+  </div>
   <div class="container-inicio">
+    <h2>Quesera <strong>{{informacionQuesera.str_cliente_nombre}}</strong></h2>
+      <div class="opciones">
+        <button mat-raised-button color="secundary" (click)="showComponent('VerDiarios')">Registros Libro Diario</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Nuevo Registro')">Nuevo Registro</button>
+      </div>
+  </div>
+  <div *ngIf="currentComponent==='Nuevo Registro'">
     <h2>Registro de Libro Diario</h2>
     <h2>Empresa <strong>{{informacionQuesera.str_cliente_nombre}}</strong></h2>
-    <div>
-      <button type="button" (click)="addEntry()">Agregar Fila</button>
-    </div>
     <div>
       <mat-form-field>
         <mat-label>Fecha del registro</mat-label>
@@ -14,6 +21,9 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+      <div>
+        <button type="button" (click)="addEntry()">Agregar Fila</button>
+      </div>
     </div>
     <form [formGroup]="journalForm" (ngSubmit)="onSubmit()">
       <table>
@@ -59,4 +69,10 @@
       <button type="submit" [disabled]="!isBalanced">Guardar</button>
     </form>
   </div>
+
+  <ng-container *ngIf="currentComponent === 'VerDiarios'">
+    <app-ver-diarios></app-ver-diarios>
+  </ng-container>
+
+
 </div>

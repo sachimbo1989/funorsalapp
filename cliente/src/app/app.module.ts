@@ -56,6 +56,7 @@ import {NativeDateAdapter} from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EditarCuentaComponent } from './plan-cuentas/editar-cuenta/editar-cuenta.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { VerDiariosComponent } from './libroDiario/ver-diarios/ver-diarios.component';
 
 
 
@@ -87,7 +88,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
       AgregarGastoComponent,
       ReportesComponent,
       AgregarCuentaComponent,
-      EditarCuentaComponent
+      EditarCuentaComponent,
+      VerDiariosComponent
    ],
   imports: [
     BrowserModule,

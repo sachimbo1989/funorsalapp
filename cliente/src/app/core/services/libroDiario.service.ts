@@ -21,7 +21,6 @@ export interface LibroDiario {
   providedIn: 'root'
 })
 export class libroDiarioService {
-  private apiUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) {}
 
@@ -32,6 +31,11 @@ export class libroDiarioService {
   //crear un libro diario
   createLibroDiario(libroDiario: any) {
     return this.http.post<LibroDiario>(`${this.url}`, libroDiario);
+  }
+
+  //obtener los libros diarios de un cliente
+  getLibrosDiarios(int_cliente_id: number){
+    return this.http.get<any>(`${this.url}/cliente/${int_cliente_id}`);
   }
 
 

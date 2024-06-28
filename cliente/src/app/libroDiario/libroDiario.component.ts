@@ -25,6 +25,7 @@ export class LibroDiarioComponent implements OnInit {
   totalDebit = 0;
   totalCredit = 0;
   filteredAccounts: any[][] = [];
+  currentComponent = 'VerDiarios';
 
   constructor(private fb: FormBuilder,
     private srvCuentas: CuentasService,
@@ -49,7 +50,13 @@ export class LibroDiarioComponent implements OnInit {
       this.availableAccounts = cuentas;
     });
   }
-
+  verDiarios(){
+    console.log('ver diarios');
+    this.currentComponent = 'VerDiarios';
+  }
+  showComponent(component: string) {
+    this.currentComponent = component;
+  }
   ngOnInit() {
     this.updateSums();
   }
@@ -104,6 +111,10 @@ export class LibroDiarioComponent implements OnInit {
               text: data.message,
               icon: 'success',
               confirmButtonText: 'Aceptar'
+            });
+            //limpiar formulario
+            this.journalForm = this.fb.group({
+              entries: this.fb.array([this.createEntry()])
             });
           }else{
             Swal.fire({

@@ -39,5 +39,11 @@ export const DetalleDiario = sequelize .define('detalle_libro_diario', {
     schema: 'estados_financieros',
     timestamps: false,
     freezeTableName: true,
-});    
+});  
+
+//relaciones
+
+DetalleDiario.belongsTo(LibroDiario,{ foreignKey:'int_libro_diario_id'});
+LibroDiario.hasMany(DetalleDiario,{ foreignKey:'int_libro_diario_id'});
+
     
