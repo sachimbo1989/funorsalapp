@@ -10,6 +10,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import Swal from 'sweetalert2';
+import { ClienteService } from 'src/app/core/services/cliente.service';
 
 
 @Component({
@@ -27,11 +28,16 @@ export class AgregarCuentaComponent implements OnInit {
 
   infoCuentaSeleccionada!: Cuenta;
 
-
+  informacionQuesera!: any;
 
   constructor(
-    private srvCuentas: CuentasService
+    private srvCuentas: CuentasService,
+    private srvCliente: ClienteService,
   ) {
+    this.srvCliente.selectClienteLogueado$.subscribe((cliente: any) => {
+      this.informacionQuesera = cliente;
+      console.log("Informacion Quesera",this.informacionQuesera);
+    });
    }
 
   ngOnInit() {
@@ -79,7 +85,7 @@ export class AgregarCuentaComponent implements OnInit {
         str_cuenta_nombre: this.newCuenta.nombre,
         str_cuenta_codigo: this.newCuenta.codigo,
         int_cuenta_padre_id: this.infoCuentaSeleccionada.int_cuenta_id,
-        int_cliente_id: 1
+        int_cliente_id: this.informacionQuesera.int_cliente_id
       };
       this.srvCuentas.agregarCuentaByIdCliente(nuevaCuenta).pipe()
       .subscribe((res: any) => {
