@@ -37,6 +37,11 @@ import { HttpParams } from "@angular/common/http";
     return this.idClienteLogueado$.asObservable();
   }
 
+  isLogueado() {
+    console.log('PASO 2: Verificando si el cliente está logueado');
+    return !!localStorage.getItem('idCliente');
+  }
+
 
 
   public idClienteLogueado!: number;
@@ -51,6 +56,11 @@ import { HttpParams } from "@angular/common/http";
     return this.clientesPaginados$.asObservable();
   }
 
+  guardarIdClienteLogueado(idCliente: any) {
+    console.log('Guardando id del cliente logueado', idCliente);
+    localStorage.setItem('idCliente', idCliente.toString());
+    this.obtenerCliente(idCliente);
+  }
 
 
   //Rutas de la API
@@ -139,12 +149,10 @@ import { HttpParams } from "@angular/common/http";
 
   //funcion para obtener la informacion de un cliente
   obtenerCliente(id: any) {
-    console.log('Obteniendo cliente SSSSSSSSSSSSS', id);
     this.getCliente(id)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (data: any) => {
-        console.log('Cliente obtenido!!!!!!!!!!!!!!!!!!!!!!', data.body);
         this.setClienteLogueado(data.body);
       },
       error: (error: any) => {

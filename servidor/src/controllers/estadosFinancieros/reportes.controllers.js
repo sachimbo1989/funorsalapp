@@ -13,10 +13,12 @@ import { Op } from "sequelize";
 const crearBalanceIngresosGastosPorIdCliente = async (req, res) => {
     try {
         const { idCliente } = req.params;
-        const { fechaInicio, fechaFin } = req.body;
+        let { fechaInicio, fechaFin } = req.body;
         console.log("idCliente", idCliente);
         console.log("fechaInicio", fechaInicio);
         console.log("fechaFin", fechaFin);
+        fechaInicio ="2023-06-28T18:10:57.366Z"
+        fechaFin ="2025-06-28T18:10:57.366Z"
 
         const cliente = await Cliente.findOne({
             where: { int_cliente_id: idCliente }
@@ -109,14 +111,21 @@ const crearBalanceIngresosGastosPorIdCliente = async (req, res) => {
         };
 
         const pdfBase64 = await generarPdfBalanceBase64(infoBalanceIngresosGastos);
-        console.log("PDF", pdfBase64);
 
-        return res.json({
-            status: true,
-            message: "Balance de ingresos y gastos encontrado",
-            body: infoBalanceIngresosGastos,
-            pdf: pdfBase64
-        });
+        //devolver con la cabezera de pdf
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', "inline; filename=informe.pdf");
+        res.send(Buffer.from(pdfBase64, 'base64'));
+
+          //Para visualizar el pdf en el navegador
+  /*
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "inline; filename=informe.pdf");
+    res.send(Buffer.from(pdfBase64String, "base64"));
+    */
+        
+
+        
 
     } catch (error) {
         console.log(error);

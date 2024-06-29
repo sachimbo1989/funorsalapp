@@ -58,7 +58,8 @@ export class LoginComponent implements OnInit {
               //guardar el id del usuario
               this.srvCliente.setidClienteLogueado(data.body.int_cliente_id);
               this.srvCliente.setClienteLogueado(data.body)
-              console.log("Cliente logueado xd",this.srvCliente.clienteLogueado);
+              //guardar el id del usuario en localStorage
+              this.loginService.guardarIdClienteLogueado(data.body.int_cliente_id);
               this.router.navigate(['/inicio']);
               this.loginService.logueado = true;
             }else{

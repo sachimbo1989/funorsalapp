@@ -1,118 +1,116 @@
 
-import pdfmake from 'pdfmake';
 import fs from 'fs';
+import pdfmake from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
 
 
-function generarPdfBalanceBase64(infoBalanceIngresosGastos){
-    const fonts = {
-        Roboto: {
-            normal: 'node_modules/pdfmake/build/vfs_fonts.js',
-            bold: 'node_modules/pdfmake/build/vfs_fonts.js',
-            italics: 'node_modules/pdfmake/build/vfs_fonts.js',
-            bolditalics: 'node_modules/pdfmake/build/vfs_fonts.js'
-        }
-    };
+pdfmake.vfs = pdfFonts.pdfMake.vfs;
 
-    const printer = new pdfmake(fonts);
-
+async function generarPdfBalanceBase64(infoBalanceIngresosGastos) {
     const docDefinition = {
         content: [
-            { text: 'Balance de Ingresos y Gastos', style: 'header' },
-            { text: `Fecha: ${new Date().toLocaleDateString()}`, style: 'subheader' },
+            { text: infoBalanceIngresosGastos.cliente, style: 'title' },
+            { text: 'BALANCE DE INGRESOS Y GASTOS', style: 'header' },
+            { text: `DEL ${new Date(infoBalanceIngresosGastos.fechaInicio).toLocaleDateString()} AL ${new Date(infoBalanceIngresosGastos.fechaFin).toLocaleDateString()}`, style: 'subheader' },
+            { text: ' ' },  // Espacio en blanco
+            { text: 'INGRESOS', style: 'sectionHeader' },
             {
                 table: {
-                    widths: ['*', '*'],
+                    widths: ['*', 'auto'],
                     body: [
-                        [{ text: 'Ingresos', style: 'tableHeader' }, { text: 'Gastos', style: 'tableHeader' }],
-                        [{ text: infoBalanceIngresosGastos.ingresos.toFixed(2), style: 'tableData' }, { text: infoBalanceIngresosGastos.gastos.toFixed(2), style: 'tableData' }]
-                    ]
-                }
-            },
-            { text: 'Cuentas de Ingresos', style: 'subheader' },
-            {
-                table: {
-                    widths: ['*', '*', '*'],
-                    body: [
-                        [
-                            { text: 'Código de Cuenta', style: 'tableHeader' },
-                            { text: 'Nombre de Cuenta', style: 'tableHeader' },
-                            { text: 'Monto', style: 'tableHeader' }
-                        ],
                         ...infoBalanceIngresosGastos.cuentasIngresos.map(cuenta => [
-                            { text: cuenta.str_detalle_libro_diario_codigo_cuenta, style: 'tableData' },
                             { text: cuenta.str_detalle_libro_diario_nombre_cuenta, style: 'tableData' },
                             { text: cuenta.dc_detalle_libro_diario_monto.toFixed(2), style: 'tableData' }
-                        ])
+                        ]),
+                        [
+                            { text: 'Total Ingresos', style: 'totalLabel' },
+                            { text: infoBalanceIngresosGastos.ingresos.toFixed(2), style: 'totalData' }
+                        ]
                     ]
                 }
             },
-            { text: 'Cuentas de Gastos', style: 'subheader' },
+            { text: ' ' },  // Espacio en blanco
+            { text: 'GASTOS', style: 'sectionHeader' },
             {
                 table: {
-                    widths: ['*', '*', '*'],
+                    widths: ['*', 'auto'],
                     body: [
-                        [
-                            { text: 'Código de Cuenta', style: 'tableHeader' },
-                            { text: 'Nombre de Cuenta', style: 'tableHeader' },
-                            { text: 'Monto', style: 'tableHeader' }
-                        ],
                         ...infoBalanceIngresosGastos.cuentasGastos.map(cuenta => [
-                            { text: cuenta.str_detalle_libro_diario_codigo_cuenta, style: 'tableData' },
                             { text: cuenta.str_detalle_libro_diario_nombre_cuenta, style: 'tableData' },
                             { text: cuenta.dc_detalle_libro_diario_monto.toFixed(2), style: 'tableData' }
-                        ])
+                        ]),
+                        [
+                            { text: 'Total Gastos', style: 'totalLabel' },
+                            { text: infoBalanceIngresosGastos.gastos.toFixed(2), style: 'totalData' }
+                        ]
                     ]
                 }
             },
-            { text: `Resultado: ${infoBalanceIngresosGastos.resultado.toFixed(2)}`, style: 'result' }
+            { text: ' ' },  // Espacio en blanco
+            { text: 'RESULTADO DEL EJERCICIO', style: 'sectionHeader' },
+            { text: infoBalanceIngresosGastos.resultado.toFixed(2), style: 'result' }
         ],
         styles: {
+            title: {
+                fontSize: 20,
+                bold: true,
+                alignment: 'center',
+                margin: [0, 0, 0, 20],
+                // color: '#31708f'  // Color azul
+            },
             header: {
                 fontSize: 18,
                 bold: true,
-                margin: [0, 0, 0, 10]
+                alignment: 'center',
+                margin: [0, 0, 0, 10],
+                // color: '#3c763d'  // Color verde oscuro
             },
             subheader: {
                 fontSize: 15,
-                bold: true,
-                margin: [0, 10, 0, 5]
+                alignment: 'center',
+                margin: [0, 0, 0, 20],
+                // color: '#8a6d3b'  // Color marrón
             },
-            tableHeader: {
+            sectionHeader: {
+                fontSize: 16,
                 bold: true,
-                fontSize: 13,
-                color: 'black'
+                margin: [0, 10, 0, 5],
+                // color: '#a94442'  // Color rojo oscuro
             },
             tableData: {
-                margin: [0, 5, 0, 5]
+                margin: [0, 5, 0, 5],
+                // fillColor: '#f0ad4e'  // Color naranja claro para datos de tabla
+            },
+            totalLabel: {
+                bold: true,
+                margin: [0, 5, 0, 5],
+                fillColor: '#337ab7'  // Color azul oscuro para etiquetas de total
+            },
+            totalData: {
+                bold: true,
+                margin: [0, 5, 0, 5],
+                alignment: 'right',
+                fillColor: '#5cb85c'  // Color verde para datos de total
             },
             result: {
                 fontSize: 16,
                 bold: true,
-                margin: [0, 10, 0, 10]
+                alignment: 'right',
+                margin: [0, 10, 0, 10],
+                color: '#d9534f'  // Color rojo para resultado
             }
         }
     };
 
-    const pdfDoc = printer.createPdfKitDocument(docDefinition);
-    const chunks = [];
-
     return new Promise((resolve, reject) => {
-        pdfDoc.on('data', chunk => {
-            chunks.push(chunk);
-        });
-
-        pdfDoc.on('end', () => {
-            const result = Buffer.concat(chunks);
-            const base64 = result.toString('base64');
-            resolve(base64);
-        });
-
-        pdfDoc.on('error', (error) => {
+        const pdfDoc = pdfmake.createPdf(docDefinition);
+        pdfDoc.getBase64((data) => {
+            resolve(data);
+        }, (error) => {
             reject(error);
         });
-
-        pdfDoc.end();
     });
-};
+}
 
 export default generarPdfBalanceBase64;
+
