@@ -1,10 +1,10 @@
-<div class="containerPrincipal">
+<div class="containerPrincipalReporte">
   <div class="container-inicio">
     <h2>Quesera <strong>{{informacionQuesera.str_cliente_nombre}}</strong></h2>
       <div class="opciones">
         <button mat-raised-button color="secundary" (click)="showComponent('IngresosGastos')">Balance de Ingresos y Gastos</button>
-        <button mat-raised-button color="secundary" (click)="showComponent('Balance2')">Balance 2</button>
-        <button mat-raised-button color="secundary" (click)="showComponent('Balance3')">Balance 3</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Balance2')">Balance General</button>
+        <button mat-raised-button color="secundary" (click)="showComponent('Balance3')">Balance de Comprobación</button>
       </div>
   </div>
 
@@ -13,10 +13,11 @@
   </ng-container>
 
   <ng-container *ngIf="currentComponent === 'Balance2'">
-
+    <app-reportes-general></app-reportes-general>
   </ng-container>
 
   <ng-container *ngIf="currentComponent === 'Balance3'">
+    <app-reportes-comprobacion></app-reportes-comprobacion>
   </ng-container>
 
 </div>

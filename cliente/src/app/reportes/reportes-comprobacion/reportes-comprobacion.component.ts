@@ -6,11 +6,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { VerPdfComponent } from 'src/app/ver-pdf/ver-pdf.component';	
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
-  selector: 'app-reportes-ingresos',
-  templateUrl: './reportes-ingresos.component.html',
-  styleUrls: ['./reportes-ingresos.component.css']
+  selector: 'app-reportes-comprobacion',
+  templateUrl: './reportes-comprobacion.component.html',
+  styleUrls: ['./reportes-comprobacion.component.css']
 })
-export class ReportesIngresosComponent implements OnInit {
+export class ReportesComprobacionComponent implements OnInit {
 
   fechaInicio!: Date;
   fechaFin!: Date;
@@ -37,10 +37,10 @@ export class ReportesIngresosComponent implements OnInit {
     if(this.fechaInicio == null || this.fechaFin == null){
       return;
     }
-    this.srvReportes.getReporteIngresosGastos(this.informacionQuesera.int_cliente_id, this.fechaInicio, this.fechaFin)
+    this.srvReportes.getReporteBalanceComprobacion(this.informacionQuesera.int_cliente_id, this.fechaInicio, this.fechaFin)
     .subscribe((data: any) => {
       Swal.fire({
-        title: 'Reporte de Ingresos y Gastos',
+        title: 'Balance de Comprobación',
         text: 'Reporte generado con éxito',
         icon: 'success',
         confirmButtonText: 'Aceptar'
@@ -54,5 +54,6 @@ export class ReportesIngresosComponent implements OnInit {
     })
 
   }
+
 
 }

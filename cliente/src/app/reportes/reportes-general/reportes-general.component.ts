@@ -5,12 +5,13 @@ import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { VerPdfComponent } from 'src/app/ver-pdf/ver-pdf.component';	
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 @Component({
-  selector: 'app-reportes-ingresos',
-  templateUrl: './reportes-ingresos.component.html',
-  styleUrls: ['./reportes-ingresos.component.css']
+  selector: 'app-reportes-general',
+  templateUrl: './reportes-general.component.html',
+  styleUrls: ['./reportes-general.component.css']
 })
-export class ReportesIngresosComponent implements OnInit {
+export class ReportesGeneralComponent implements OnInit {
 
   fechaInicio!: Date;
   fechaFin!: Date;
@@ -37,10 +38,10 @@ export class ReportesIngresosComponent implements OnInit {
     if(this.fechaInicio == null || this.fechaFin == null){
       return;
     }
-    this.srvReportes.getReporteIngresosGastos(this.informacionQuesera.int_cliente_id, this.fechaInicio, this.fechaFin)
+    this.srvReportes.getReporteBalanceGeneral(this.informacionQuesera.int_cliente_id, this.fechaInicio, this.fechaFin)
     .subscribe((data: any) => {
       Swal.fire({
-        title: 'Reporte de Ingresos y Gastos',
+        title: 'Balance General',
         text: 'Reporte generado con éxito',
         icon: 'success',
         confirmButtonText: 'Aceptar'
@@ -54,5 +55,6 @@ export class ReportesIngresosComponent implements OnInit {
     })
 
   }
+
 
 }

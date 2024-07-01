@@ -57,11 +57,14 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EditarCuentaComponent } from './plan-cuentas/editar-cuenta/editar-cuenta.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { VerDiariosComponent } from './libroDiario/ver-diarios/ver-diarios.component';
+import { VerPdfComponent } from './ver-pdf/ver-pdf.component';
+import { ReportesComprobacionComponent } from './reportes/reportes-comprobacion/reportes-comprobacion.component';
+import { ReportesGeneralComponent } from './reportes/reportes-general/reportes-general.component';
 
 
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppComponent,
     NavegacionComponent,
     DashboardComponent,
@@ -89,7 +92,11 @@ import { VerDiariosComponent } from './libroDiario/ver-diarios/ver-diarios.compo
       ReportesComponent,
       AgregarCuentaComponent,
       EditarCuentaComponent,
-      VerDiariosComponent
+      VerDiariosComponent,
+      VerPdfComponent,
+      ReportesIngresosComponent,
+      ReportesComprobacionComponent,
+      ReportesGeneralComponent
    ],
   imports: [
     BrowserModule,

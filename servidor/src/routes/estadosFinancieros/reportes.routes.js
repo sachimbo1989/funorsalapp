@@ -5,5 +5,7 @@ import reportesController from "../../controllers/estadosFinancieros/reportes.co
 const router = Router();
 
 router.get("/ingresos-gastos/:idCliente", reportesController.crearBalanceIngresosGastosPorIdCliente);
+router.get("/comprobacion/:idCliente", reportesController.crearBalanceComprobacion);
+router.get("/balance-general/:idCliente", reportesController.crearBalanceGeneral);
 
 export default router;

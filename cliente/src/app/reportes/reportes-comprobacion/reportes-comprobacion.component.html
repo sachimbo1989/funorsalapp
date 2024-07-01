@@ -1,8 +1,6 @@
 <div class="containerPrincipal-i">
   <div class="opciones">
-    <div class="ti">
-      <h2>BALANCE DE INGRESOS Y GASTOS</h2>
-    </div>
+    <h2>BALANCE DE COMPROBACIÓN</h2>
     <mat-form-field>
       <mat-label>Enter a date range</mat-label>
       <mat-date-range-input [rangePicker]="picker">
@@ -16,4 +14,3 @@
     <button mat-raised-button color="primary" (click)="generarPDF()" [disabled]="!fechaInicio || !fechaFin">Generar Reporte</button>
   </div>
 </div>
-
